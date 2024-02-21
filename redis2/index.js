@@ -2,6 +2,7 @@ const express = require("express");
 const axios = require("axios");
 const redis = require("redis");
 
+
 const app = express();
 
 app.use(express.json());
@@ -16,13 +17,26 @@ let redisClient;
 (async () => {
   redisClient = redis.createClient({
     host: "redis-server",
-    port: "6379",
+    port: 6379,
   });
   redisClient.on("error", (error) => {
     console.error(`Error: ${error} `);
   });
   await redisClient.connect();
 })();
+
+// const client= redis.createClient({
+//   host: "localhost",
+//   port: 6379,
+//   password: 'password'
+
+// })
+// client.on('connect',()=>{
+//   console.log('connected to redis')
+// })
+// client.on('error',(err)=>{
+//   console.error('redis error:',err)
+// })
 
 const getTodo = async (req, res) => {
   const todoId = req.params.todoId;
@@ -44,7 +58,7 @@ const getTodo = async (req, res) => {
     console.error(err);
   }
 };
-app.get("/todos/todoId", getTodo);
+app.get("/todos/:todoId", getTodo);
 
 
 
